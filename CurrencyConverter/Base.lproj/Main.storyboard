@@ -100,7 +100,7 @@
                         <sections>
                             <tableViewSection id="pzQ-7A-Niv">
                                 <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="favCheck" textLabel="bbb-mt-1a0" rowHeight="66" style="IBUITableViewCellStyleDefault" id="xwm-Wl-9g5">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="USD" textLabel="bbb-mt-1a0" rowHeight="66" style="IBUITableViewCellStyleDefault" id="xwm-Wl-9g5">
                                         <rect key="frame" x="0.0" y="35" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xwm-Wl-9g5" id="HHk-fI-j6k">
@@ -117,7 +117,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="P33-e5-RAC" rowHeight="66" style="IBUITableViewCellStyleDefault" id="Zjm-jy-zb7">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="JPY" textLabel="P33-e5-RAC" rowHeight="66" style="IBUITableViewCellStyleDefault" id="Zjm-jy-zb7">
                                         <rect key="frame" x="0.0" y="101" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zjm-jy-zb7" id="gwv-jS-f2p">
@@ -134,7 +134,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="05P-VN-wZT" rowHeight="66" style="IBUITableViewCellStyleDefault" id="03q-PQ-6en">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="GBP" textLabel="05P-VN-wZT" rowHeight="66" style="IBUITableViewCellStyleDefault" id="03q-PQ-6en">
                                         <rect key="frame" x="0.0" y="167" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="03q-PQ-6en" id="g8H-Xc-tr6">
@@ -151,7 +151,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="PFt-Br-4lX" rowHeight="66" style="IBUITableViewCellStyleDefault" id="6vE-8c-Fmf">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CAD" textLabel="PFt-Br-4lX" rowHeight="66" style="IBUITableViewCellStyleDefault" id="6vE-8c-Fmf">
                                         <rect key="frame" x="0.0" y="233" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6vE-8c-Fmf" id="X8W-km-PMn">
@@ -168,7 +168,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="8hz-0N-Be1" rowHeight="66" style="IBUITableViewCellStyleDefault" id="xg2-ek-mHz">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="EUR" textLabel="8hz-0N-Be1" rowHeight="66" style="IBUITableViewCellStyleDefault" id="xg2-ek-mHz">
                                         <rect key="frame" x="0.0" y="299" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xg2-ek-mHz" id="cza-xf-AVV">
@@ -185,7 +185,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" textLabel="H6q-lB-nSI" rowHeight="66" style="IBUITableViewCellStyleDefault" id="XvO-1r-Brf">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CNY" textLabel="H6q-lB-nSI" rowHeight="66" style="IBUITableViewCellStyleDefault" id="XvO-1r-Brf">
                                         <rect key="frame" x="0.0" y="365" width="375" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XvO-1r-Brf" id="Zey-oE-ft9">
@@ -218,6 +218,18 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="cadCell" destination="6vE-8c-Fmf" id="fbD-5Z-anS"/>
+                        <outlet property="cnyCell" destination="XvO-1r-Brf" id="qqM-CJ-I8r"/>
+                        <outlet property="eurCell" destination="xg2-ek-mHz" id="5tG-A7-xqD"/>
+                        <outlet property="gbpCell" destination="03q-PQ-6en" id="RVx-j7-B1b"/>
+                        <outlet property="jpyCell" destination="Zjm-jy-zb7" id="cJG-Yx-Daw"/>
+                        <outlet property="usdCell" destination="xwm-Wl-9g5" id="xqE-Cp-z5W"/>
+                        <outletCollection property="selectionCell" destination="xwm-Wl-9g5" collectionClass="NSMutableArray" id="uOc-2b-yGW"/>
+                        <outletCollection property="selectionCell" destination="Zjm-jy-zb7" collectionClass="NSMutableArray" id="exy-62-ygb"/>
+                        <outletCollection property="selectionCell" destination="03q-PQ-6en" collectionClass="NSMutableArray" id="AfA-1F-fv7"/>
+                        <outletCollection property="selectionCell" destination="6vE-8c-Fmf" collectionClass="NSMutableArray" id="7HJ-am-L4d"/>
+                        <outletCollection property="selectionCell" destination="xg2-ek-mHz" collectionClass="NSMutableArray" id="ANS-aB-JaH"/>
+                        <outletCollection property="selectionCell" destination="XvO-1r-Brf" collectionClass="NSMutableArray" id="Oqa-61-I4q"/>
                         <segue destination="TcZ-o7-2nc" kind="unwind" identifier="showCurr" unwindAction="unwindToCurrWithSegue:" id="Hws-Dm-ZC7"/>
                     </connections>
                 </tableViewController>

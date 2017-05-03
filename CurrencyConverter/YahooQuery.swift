@@ -11,9 +11,20 @@ import UIKit
 
 class YahooQuery {
     let fileName = "Userdata"
-    var queryString = ""
     static let sharedInstance:YahooQuery = YahooQuery()
     
+    // This store the Yahoo address for query
+    var queryString = ""
+    func setQueryString(_ add:String) {
+        queryString = "select * from yahoo.finance.xchange where pair in (\"" + add + "\")"
+    }
+    func getQueryString() -> String {
+        return queryString
+    }
+    func setDefault () {
+        queryString = "select * from yahoo.finance.xchange where pair in (\"" +  "USDUSD,USDJPY,USDGBP,USDCAD,USDEUR,USDCNY,JPYUSD,JPYJPY,JPYGBP,JPYCAD,JPYEUR,JPYCNY,GBPUSD,GBPJPY,GBPGBP,GBPCAD,GBPEUR,GBPCNY,CADUSD,CADJPY,CADGBP,CADCAD,CADEUR,CADCNY,EURUSD,EURJPY,EURGBP,EURCAD,EUREUR,EURCNY,CNYUSD,CNYJPY,CNYGBP,CNYCAD,CNYEUR,CNYCNY" + "\")"
+        unitPick = ["USDollar","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
+    }
     // Query table
     var unitTable:[[Double]] = [[Double]](repeating:[Double](repeating:1.0, count:6), count:6)
     func getUnitTable() -> [[Double]] {
@@ -27,7 +38,6 @@ class YahooQuery {
             }
         }
     }
-    
     // Currency unit selection
     var unitPick:[String]
     func getUnitPick() -> [String] {
@@ -35,15 +45,13 @@ class YahooQuery {
     }
     func setUnitPick(_ new:[String]) {
         self.unitPick = new
-        for i in 0...unitPick.count - 1 {
-            unitPick[i] = new[i]
-        }
     }
     
     // Initialize
     init () {
-        queryString = "select * from yahoo.finance.xchange where pair in (\"" + "USDUSD,USDJPY,USDGBP,USDCAD,USDEUR,USDCNY,JPYUSD,JPYJPY,JPYGBP,JPYCAD,JPYEUR,JPYCNY,GBPUSD,GBPJPY,GBPGBP,GBPCAD,GBPEUR,GBPCNY,CADUSD,CADJPY,CADGBP,CADCAD,CADEUR,CADCNY,EURUSD,EURJPY,EURGBP,EURCAD,EUREUR,EURCNY,CNYUSD,CNYJPY,CNYGBP,CNYCAD,CNYEUR,CNYCNY" + "\")"
         unitPick = ["USDollar","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
+        // Remember to set the queryString first before requesting the server
+        setDefault()
         updateUnitTable()
     }
     
@@ -51,7 +59,7 @@ class YahooQuery {
     func updateUnitTable() {
         let myYQL = YQL()
         var i = 0
-        myYQL.query(queryString) { jsonDict in
+        myYQL.query(getQueryString()) { jsonDict in
             let queryDict = jsonDict["query"] as! [String: Any]
             let resultDict = queryDict["results"] as! [String: Any]
             let rateDict = resultDict["rate"] as! NSArray
@@ -94,7 +102,7 @@ class YahooQuery {
         writeString += "END OF FILE"
         // Lastly, write to the file Userdata.txt
         do {
-            try writeString.write(to: fileURL, atomically: true, encoding: String.Encoding.utf8)
+            try writeString.write(to: fileURL, atomically: false, encoding: String.Encoding.utf8)
             print ("Write success!")
         } catch let error as NSError {
             print("Failed writing to URL: \(fileURL), Error: " + error.localizedDescription)
@@ -111,7 +119,7 @@ class YahooQuery {
             queryString = "select * from yahoo.finance.xchange where pair in (\"" + "USDUSD,USDJPY,USDGBP,USDCAD,USDEUR,USDCNY,JPYUSD,JPYJPY,JPYGBP,JPYCAD,JPYEUR,JPYCNY,GBPUSD,GBPJPY,GBPGBP,GBPCAD,GBPEUR,GBPCNY,CADUSD,CADJPY,CADGBP,CADCAD,CADEUR,CADCNY,EURUSD,EURJPY,EURGBP,EURCAD,EUREUR,EURCNY,CNYUSD,CNYJPY,CNYGBP,CNYCAD,CNYEUR,CNYCNY" + "\")"
             unitPick = ["USDollar","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
         }
-            // If file exists, read it!
+        // If file exists, read it!
         else {
             var readString = ""
             var i = 0

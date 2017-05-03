@@ -13,10 +13,10 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
     let global = YahooQuery.sharedInstance
     var queryString = ""
     var unitTable:[[Double]] = [[]]
-    // Array setting 2 pickerview
+    // Array setting home pickerview
     var unitPick:[String] = []
-    // these 2 coressponding arrays virtually correspond to each other
-//    let getUnit = ["USD","JPY","GBP","CAD","EUR","CNY"]
+    // Array setting foreign pickerview
+    let foreignUnit = ["USDollarFOREIGN","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
 //    let USD = 0, JPY = 1, GBP = 2, CAD = 3, EUR = 4, CNY = 5
 //    var unitTable = [[Double]](repeating: [Double](repeating: 1.0, count: 6), count: 6)
     
@@ -29,17 +29,16 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
     @IBOutlet weak var foreignPicker: UIPickerView!
     @IBOutlet weak var inputTextField: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
-
-
-    
+  
     // Initial set up
     override func viewDidLoad() {
         super.viewDidLoad()
+        global.readFile()
         unitPick = global.getUnitPick()
         unitTable = global.getUnitTable()
-        global.readFile()
-        global.writeFile()
-        global.saveFile()
+        
+        //global.writeFile()
+        //global.saveFile()
         
         homePicker.dataSource = self
         homePicker.delegate = self
@@ -62,17 +61,39 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
         self.performSegue(withIdentifier: "showFav", sender: self)
     }
     // Enable unwinding
-    @IBAction func unwindToCurr(segue:UIStoryboardSegue) {}
+    @IBAction func unwindToCurr(segue:UIStoryboardSegue) {
+        //self.viewDidLoad()
+    }
+    
     // Pickers set up
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {   return 1;   }
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {    return unitPick.count   }
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1;
+    }
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        unitPick = global.getUnitPick()
+        if (pickerView == homePicker) {
+            print("unitPick.count===")
+            print(unitPick.count)
+            return unitPick.count - 1
+        }
+        return foreignUnit.count - 1
+    }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return unitPick[row]
+        unitPick = global.getUnitPick()
+        if (pickerView == homePicker) {
+            return unitPick[row]
+        }
+        return foreignUnit[row]
     }
     // Each time changing the pickers, show what row they are at
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if (pickerView == foreignPicker) {  currForeign = row   }
-        else if (pickerView == homePicker) {    currHome = row  }
+        //unitPick = global.getUnitPick()
+        if (pickerView == foreignPicker) {
+            currForeign = row
+        }
+        else if (pickerView == homePicker) {
+            currHome = row
+        }
     }
     // Calculate button action
     @IBAction func calculateValue(_ sender: UIButton) {
