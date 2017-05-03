@@ -10,13 +10,6 @@ import UIKit
 
 class FavViewController: UITableViewController {
     let global = YahooQuery.sharedInstance
-//let getUnit = ["USD","JPY","GBP","CAD","EUR","CNY"]
-    @IBOutlet weak var usdCell: UITableViewCell!
-    @IBOutlet weak var jpyCell: UITableViewCell!
-    @IBOutlet weak var gbpCell: UITableViewCell!
-    @IBOutlet weak var cadCell: UITableViewCell!
-    @IBOutlet weak var eurCell: UITableViewCell!
-    @IBOutlet weak var cnyCell: UITableViewCell!
     
     @IBOutlet var selectionCell: [UITableViewCell]!
     override func viewDidLoad() {

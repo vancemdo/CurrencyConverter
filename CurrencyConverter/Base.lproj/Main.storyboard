@@ -218,12 +218,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="cadCell" destination="6vE-8c-Fmf" id="fbD-5Z-anS"/>
-                        <outlet property="cnyCell" destination="XvO-1r-Brf" id="qqM-CJ-I8r"/>
-                        <outlet property="eurCell" destination="xg2-ek-mHz" id="5tG-A7-xqD"/>
-                        <outlet property="gbpCell" destination="03q-PQ-6en" id="RVx-j7-B1b"/>
-                        <outlet property="jpyCell" destination="Zjm-jy-zb7" id="cJG-Yx-Daw"/>
-                        <outlet property="usdCell" destination="xwm-Wl-9g5" id="xqE-Cp-z5W"/>
                         <outletCollection property="selectionCell" destination="xwm-Wl-9g5" collectionClass="NSMutableArray" id="uOc-2b-yGW"/>
                         <outletCollection property="selectionCell" destination="Zjm-jy-zb7" collectionClass="NSMutableArray" id="exy-62-ygb"/>
                         <outletCollection property="selectionCell" destination="03q-PQ-6en" collectionClass="NSMutableArray" id="AfA-1F-fv7"/>
