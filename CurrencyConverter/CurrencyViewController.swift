@@ -12,13 +12,11 @@ import Foundation
 class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     let global = YahooQuery.sharedInstance
     var queryString = ""
-    var unitTable:[[Double]] = [[]]
-    // Array setting home pickerview
-    var unitPick:[String] = []
-    // Array setting foreign pickerview
-    let foreignUnit = ["USDollarFOREIGN","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
-//    let USD = 0, JPY = 1, GBP = 2, CAD = 3, EUR = 4, CNY = 5
-//    var unitTable = [[Double]](repeating: [Double](repeating: 1.0, count: 6), count: 6)
+    let foreignUnit = ["USDollar","Japanese Yen","British Pound","Canadian Dollar","European Euro","Chinese Yuan"]
+    let symbol = ["$","J¥","£","C$","€","C¥"]
+    let USD = 0, JPY = 1, GBP = 2, CAD = 3, EUR = 4, CNY = 5
+    var homeSymbol:[String] = []
+
     
     // these 2 var show what row pickers are at
     var currHome = 0
@@ -29,21 +27,31 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
     @IBOutlet weak var foreignPicker: UIPickerView!
     @IBOutlet weak var inputTextField: UITextField!
     @IBOutlet weak var resultLabel: UILabel!
-  
+
+    func resetPicker() {
+        homePicker.reloadAllComponents()
+        foreignPicker.reloadAllComponents()
+        foreignPicker.selectRow(0, inComponent: 0, animated: true)
+        homePicker.selectRow(0, inComponent: 0, animated: true)
+        currHome = 0
+        resultLabel.text = "Enter value!"
+    }
+    
     // Initial set up
     override func viewDidLoad() {
         super.viewDidLoad()
         global.readFile()
-        unitPick = global.getUnitPick()
-        unitTable = global.getUnitTable()
+
+        homeSymbol = global.getCurrSymbol()
         
-        //global.writeFile()
-        //global.saveFile()
+        homePicker.tag = 0
+        foreignPicker.tag = 1
         
-        homePicker.dataSource = self
+        //homePicker.dataSource = self
         homePicker.delegate = self
-        foreignPicker.dataSource = self
+        //foreignPicker.dataSource = self
         foreignPicker.delegate = self
+        
         let swipeLeft:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
         swipeLeft.direction = UISwipeGestureRecognizerDirection.left
         view.addGestureRecognizer(swipeLeft)
@@ -54,7 +62,7 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
     
     // Swipe Func handleSwipe()
     func handleSwipe(_ sender:UIGestureRecognizer) {
-        self.performSegue(withIdentifier: "showFav", sender: self)
+        self.performSegue(withIdentifier: "showFav", sender: self);
     }
     // or touch the button to go to Fav Curr
     @IBAction func gotoFav2(_ sender: UIBarButtonItem) {
@@ -62,7 +70,7 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
     }
     // Enable unwinding
     @IBAction func unwindToCurr(segue:UIStoryboardSegue) {
-        //self.viewDidLoad()
+        resetPicker()
     }
     
     // Pickers set up
@@ -70,38 +78,37 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
         return 1;
     }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        unitPick = global.getUnitPick()
-        if (pickerView == homePicker) {
-            print("unitPick.count===")
-            print(unitPick.count)
-            return unitPick.count - 1
+        if (pickerView.tag == 0) {
+            return global.getUnitPick().count
         }
-        return foreignUnit.count - 1
+        return foreignUnit.count
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        unitPick = global.getUnitPick()
-        if (pickerView == homePicker) {
-            return unitPick[row]
+        if (pickerView.tag == 0) {
+            return global.getUnitPick()[row]
         }
         return foreignUnit[row]
     }
     // Each time changing the pickers, show what row they are at
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        //unitPick = global.getUnitPick()
-        if (pickerView == foreignPicker) {
+        if (pickerView.tag == 1) {
             currForeign = row
         }
-        else if (pickerView == homePicker) {
+        else {
             currHome = row
         }
     }
     // Calculate button action
     @IBAction func calculateValue(_ sender: UIButton) {
-        if let inputStr = Double(inputTextField.text!) {
-            unitTable = global.getUnitTable()
-            
-            
-            resultLabel.text = String(unitTable[currHome][currForeign])
+        let homeSymbol = global.getCurrSymbol()
+        let unitTable = global.getUnitTable()
+        
+        if let inputVal = Double(inputTextField.text!) {
+            print(unitTable)
+            let resultVal = inputVal * unitTable[currHome][currForeign]
+            let resultText = homeSymbol[currHome] +
+                inputTextField.text! + " is " + symbol[currForeign] + String(resultVal)
+            resultLabel.text = resultText
         }
         else {
             resultLabel.text = "Invalid input!"

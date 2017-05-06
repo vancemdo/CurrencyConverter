@@ -6,42 +6,44 @@
 //  Copyright © 2017 Vance. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class YahooQuery {
-    let fileName = "Userdata"
     static let sharedInstance:YahooQuery = YahooQuery()
+    let fileName = "Userdata"
+    
+    // Currency symbol
+    var currSymbol:[String]
+    func getCurrSymbol() -> [String] {
+        return self.currSymbol
+    }
+    func setCurrSymbol(_ new:[String]) {
+        self.currSymbol = new
+    }
     
     // This store the Yahoo address for query
-    var queryString = ""
+    var queryString:String
     func setQueryString(_ add:String) {
-        queryString = "select * from yahoo.finance.xchange where pair in (\"" + add + "\")"
+        self.queryString = "select * from yahoo.finance.xchange where pair in (\"" + add + "\")"
     }
-    func getQueryString() -> String {
-        return queryString
-    }
+    // Set default if read file does not exist and user does not choose anything from favorite
     func setDefault () {
-        queryString = "select * from yahoo.finance.xchange where pair in (\"" +  "USDUSD,USDJPY,USDGBP,USDCAD,USDEUR,USDCNY,JPYUSD,JPYJPY,JPYGBP,JPYCAD,JPYEUR,JPYCNY,GBPUSD,GBPJPY,GBPGBP,GBPCAD,GBPEUR,GBPCNY,CADUSD,CADJPY,CADGBP,CADCAD,CADEUR,CADCNY,EURUSD,EURJPY,EURGBP,EURCAD,EUREUR,EURCNY,CNYUSD,CNYJPY,CNYGBP,CNYCAD,CNYEUR,CNYCNY" + "\")"
-        unitPick = ["USDollar","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
+        self.setQueryString("USDUSD,USDJPY,USDGBP,USDCAD,USDEUR,USDCNY,JPYUSD,JPYJPY,JPYGBP,JPYCAD,JPYEUR,JPYCNY,GBPUSD,GBPJPY,GBPGBP,GBPCAD,GBPEUR,GBPCNY,CADUSD,CADJPY,CADGBP,CADCAD,CADEUR,CADCNY,EURUSD,EURJPY,EURGBP,EURCAD,EUREUR,EURCNY,CNYUSD,CNYJPY,CNYGBP,CNYCAD,CNYEUR,CNYCNY")
+        self.setUnitPick(["USDollar","Japanese Yen","British Pound", "Canadian Dollar","European Euro","Chinese Yuan"])
+        self.setCurrSymbol(["$","J¥","£","C$","€","C¥"])
     }
     // Query table
-    var unitTable:[[Double]] = [[Double]](repeating:[Double](repeating:1.0, count:6), count:6)
+    var unitTable:[[Double]]
     func getUnitTable() -> [[Double]] {
-        return unitTable
+        return self.unitTable
     }
     func setUnitTable(_ new:[[Double]]) {
         self.unitTable = new
-        for row in 0...unitPick.count - 1 {
-            for column in 0...5 {
-                unitTable[row][column] = new[row][column]
-            }
-        }
     }
     // Currency unit selection
     var unitPick:[String]
     func getUnitPick() -> [String] {
-        return unitPick
+        return self.unitPick
     }
     func setUnitPick(_ new:[String]) {
         self.unitPick = new
@@ -49,38 +51,37 @@ class YahooQuery {
     
     // Initialize
     init () {
-        unitPick = ["USDollar","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
+        self.unitPick = []
+        self.queryString = ""
+        self.unitTable = []
+        self.currSymbol = []
         // Remember to set the queryString first before requesting the server
-        setDefault()
-        updateUnitTable()
+        self.setDefault()
+        self.updateUnitTable()
     }
     
     // Update query
     func updateUnitTable() {
+        self.unitTable = []
         let myYQL = YQL()
         var i = 0
-        myYQL.query(getQueryString()) { jsonDict in
+        myYQL.query(self.queryString) { jsonDict in
             let queryDict = jsonDict["query"] as! [String: Any]
             let resultDict = queryDict["results"] as! [String: Any]
             let rateDict = resultDict["rate"] as! NSArray
-            for row in 0...self.unitPick.count - 1 {
-                for column in 0...5 {
+            for _ in 0...self.unitPick.count - 1 {
+                var element:[Double] = []
+                for _ in 0...5 {
                     let rate1 = rateDict[i] as! [String: Any]
                     let rate2 = String(describing: rate1["Rate"]!)
                     let add = Double(rate2)!
-                    self.unitTable[row][column] = add
-                    print(self.unitTable[row][column])
-                    i+=1
+                    element.append(add)
+                    i += 1
                 }
+                self.unitTable.append(element)
             }
+            self.writeFile()
         }
-    }
-
-    // Save data to file
-    func saveFile() {
-        let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        let fileURL = DocumentDirURL.appendingPathComponent(fileName).appendingPathExtension("txt")
-        print("FilePath: \(fileURL.path)")
     }
     
     // Write user's data on to Userdata.txt
@@ -89,14 +90,14 @@ class YahooQuery {
         let fileURL = DocumentDirURL.appendingPathComponent(fileName).appendingPathExtension("txt")
         // First, store the user's pickerview selection on currency
         var writeString = ""
-        for i in 0...unitPick.count - 1 {
-            writeString += unitPick[i] + "\n"
+        for i in 0...self.unitPick.count - 1 {
+            writeString += self.unitPick[i] + "\n"
         }
         // Second, store the rate
         writeString += "Rate\n"
-        for j in 0...unitPick.count - 1 {
+        for j in 0...self.unitPick.count - 1 {
             for h in 0...5 {
-                writeString += String(unitTable[j][h]) + "\n"
+                writeString += String(self.unitTable[j][h]) + "\n"
             }
         }
         writeString += "END OF FILE"
@@ -109,72 +110,57 @@ class YahooQuery {
         }
     }
     
-    
     // Read/collect user's data from Userdata.txt
     func readFile() {
         let DocumentDirURL = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
         let fileURL = DocumentDirURL.appendingPathComponent(fileName).appendingPathExtension("txt")
-        // If file does not exist, set default of 6 currencies on each pickerview and query all 36 unit from yahoo
-        if (String(describing: fileURL) != "Userdata.txt") {
-            queryString = "select * from yahoo.finance.xchange where pair in (\"" + "USDUSD,USDJPY,USDGBP,USDCAD,USDEUR,USDCNY,JPYUSD,JPYJPY,JPYGBP,JPYCAD,JPYEUR,JPYCNY,GBPUSD,GBPJPY,GBPGBP,GBPCAD,GBPEUR,GBPCNY,CADUSD,CADJPY,CADGBP,CADCAD,CADEUR,CADCNY,EURUSD,EURJPY,EURGBP,EURCAD,EUREUR,EURCNY,CNYUSD,CNYJPY,CNYGBP,CNYCAD,CNYEUR,CNYCNY" + "\")"
-            unitPick = ["USDollar","Japanese Yen","Brittish Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
+        
+        var readString = ""
+        do {
+            readString = try String(contentsOf: fileURL, encoding: String.Encoding.utf8)
+        } catch let error as NSError {
+            print("Failed reading from URL: \(fileURL), Error: " + error.localizedDescription)
         }
-        // If file exists, read it!
-        else {
-            var readString = ""
-            var i = 0
-            do {
-                readString = try String(contentsOf: fileURL)
-            } catch let error as NSError {
-                print("Failed reading from URL: \(fileURL), Error: " + error.localizedDescription)
+        if (readString == "") {
+            readString = firstTimeRun
+        }
+        var newUnitPick: [String] = []
+        var newCurrSymbol: [String] = []
+        var newUnitTable: [[Double]] = []
+        var rate = false
+        var lineStr = readString.components(separatedBy: .newlines)
+
+        var i = 0
+        while (i < lineStr.count - 1) {
+            if (lineStr[i] != "Rate" && rate == false) {
+                newUnitPick.append(lineStr[i])
+                switch lineStr[i] {
+                    case "USDollar": newCurrSymbol.append("$")
+                    case "Japanese Yen": newCurrSymbol.append("J¥")
+                    case "British Pound": newCurrSymbol.append("£")
+                    case "Canadian Dollar": newCurrSymbol.append("C$")
+                    case "European Euro": newCurrSymbol.append("€")
+                    case "Chinese Yuan": newCurrSymbol.append("C¥")
+                    default: break
+                }
+                i += 1
             }
-            
-            var r = 0
-            var c = 0
-            var rate = false
-            var lineStr = String(describing: readString.components(separatedBy: .newlines))
-            while (lineStr != "END OF FILE") {
-                if (rate == false) {
-                    unitPick[i] = ""
+            else if (lineStr[i] == "Rate" && rate == false) {
+                rate = true
+                i += 1
+            }
+            else if (rate == true && lineStr[i] != "END OF FILE") {
+                var element:[Double] = []
+                for _ in 0...5 {
+                    element.append(Double(lineStr[i])!)
                     i += 1
                 }
-                if (lineStr == "Rate") {
-                    rate = true
-                    lineStr = String(describing: readString.components(separatedBy: .newlines))
-                }
-                if (rate == true) {
-                    unitTable[r][c] = Double(lineStr)!
-                    c += 1
-                    if (c == 6) {
-                        c = 0
-                        r += 1
-                    }
-                }
-                lineStr = String(describing: readString.components(separatedBy: .newlines))
+                newUnitTable.append(element)
             }
         }
-        
-        // First, retrieve user's pickerview selection on currency
-        //unitPick
-        // Second, retrieve the rate
-        //
-        
-        
-        
-        
-        //        /*** Read from project txt file ***/
-        //
-        //        // File location
-        //        let fileURLProject = Bundle.main.path(forResource: "ProjectTextFile", ofType: "txt")
-        //        // Read from the file
-        //        var readStringProject = ""
-        //        do {
-        //            readStringProject = try String(contentsOfFile: fileURLProject!, encoding: String.Encoding.utf8)
-        //        } catch let error as NSError {
-        //            print("Failed reading from URL: \(fileURL), Error: " + error.localizedDescription)
-        //        }
-        //        
-        //        print(readStringProject)
+        self.setUnitPick(newUnitPick)
+        self.setCurrSymbol(newCurrSymbol)
+        self.setUnitTable(newUnitTable)
     }
-
+    private let firstTimeRun = "USDollar\nJapanese Yen\nBritish Pound\nCanadian Dollar\nEuropean Euro\nChinese Yuan\nRate\n1.0\n112.681\n0.777\n1.3728\n0.9181\n6.8967\n0.0089\n1.0\n0.0069\n0.0122\n0.0081\n0.0611\n1.2869\n145.008\n1.0\n1.7667\n1.1818\n8.8751\n0.7282\n82.078\n0.5654\n1.0\n0.6686\n5.0225\n1.0889\n122.704\n0.8461\n1.4949\n1.0\n7.5101\n0.1449\n16.316\n0.1126\n0.1986\n0.1331\n1.0\nEND OF FILE"
 }
