@@ -9,6 +9,18 @@
 import UIKit
 import Foundation
 
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
 class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     let global = YahooQuery.sharedInstance
     var queryString = ""
@@ -34,6 +46,7 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
         foreignPicker.selectRow(0, inComponent: 0, animated: true)
         homePicker.selectRow(0, inComponent: 0, animated: true)
         currHome = 0
+        currForeign = 0
         resultLabel.text = "Enter value!"
     }
     
@@ -51,11 +64,15 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
         homePicker.delegate = self
         //foreignPicker.dataSource = self
         foreignPicker.delegate = self
+        inputTextField.keyboardType = UIKeyboardType.numberPad
+        //inputTextField.delegate = self
         
+        self.hideKeyboardWhenTappedAround() 
         let swipeLeft:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
         swipeLeft.direction = UISwipeGestureRecognizerDirection.left
         view.addGestureRecognizer(swipeLeft)
     }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
