@@ -1,6 +1,6 @@
 Currency Converter Created by Van Do on 5/01/17. Copyright © 2017 Van Do. All rights reserved. 
 Simple iOS applicatiton calculating and converting currency using Yahoo Exchange query. 
-Currency unit includes US Dollar, Canadian Dollar, European Euro, Japanese Yen, British Pound and Chinese Yuan.
+Currency units include US Dollar, Canadian Dollar, European Euro, Japanese Yen, British Pound and Chinese Yuan.
 
 Third party use: YQL.swift
 Copyright (c) 2017 David McLaren
