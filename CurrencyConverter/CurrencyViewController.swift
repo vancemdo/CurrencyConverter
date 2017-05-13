@@ -15,7 +15,6 @@ extension UIViewController {
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
     }
-    
     func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -23,12 +22,7 @@ extension UIViewController {
 
 class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     let global = YahooQuery.sharedInstance
-    var queryString = ""
-    let foreignUnit = ["USDollar","Japanese Yen","British Pound","Canadian Dollar","European Euro","Chinese Yuan"]
-    let symbol = ["$","J¥","£","C$","€","C¥"]
-    let USD = 0, JPY = 1, GBP = 2, CAD = 3, EUR = 4, CNY = 5
     var homeSymbol:[String] = []
-
     
     // these 2 var show what row pickers are at
     var currHome = 0
@@ -95,16 +89,10 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
         return 1;
     }
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if (pickerView.tag == 0) {
             return global.getUnitPick().count
-        }
-        return foreignUnit.count
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if (pickerView.tag == 0) {
             return global.getUnitPick()[row]
-        }
-        return foreignUnit[row]
     }
     // Each time changing the pickers, show what row they are at
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -124,7 +112,7 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
             print(unitTable)
             let resultVal = inputVal * unitTable[currHome][currForeign]
             let resultText = homeSymbol[currHome] +
-                inputTextField.text! + " is " + symbol[currForeign] + String(resultVal)
+                inputTextField.text! + " is " + homeSymbol[currForeign] + String(resultVal)
             resultLabel.text = resultText
         }
         else {

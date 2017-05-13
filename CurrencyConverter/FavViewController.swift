@@ -25,28 +25,35 @@ class FavViewController: UITableViewController {
     // When hiting Done, reset picker selection request query, 
     // then go back to first view.
     @IBAction func gotoCurr(_ sender: UIBarButtonItem) {
-        let getUnit = ["USD","JPY","GBP","CAD","EUR","CNY"]
+        //let getUnit = ["USD","JPY","GBP","CAD","EUR","CNY"]
         let nameUnit = ["USDollar","Japanese Yen","British Pound", "Canadian Dollar","European Euro","Chinese Yuan"]
         let symbol = ["$","J¥","£","C$","€","C¥"]
         var queryAdd = ""
+        
         var newUnitPick:[String] = []
         var newSymbol:[String] = []
+        var newUnit:[String] = []
+
         
         // Reset query string
         for i in 0...selectionCell.count - 1 {
             if (selectionCell[i].isSelected) {
-                let identity = selectionCell[i].reuseIdentifier!
+                let identity:String = selectionCell[i].reuseIdentifier!
                 newSymbol.append(symbol[i])
                 newUnitPick.append(nameUnit[i])
-                for j in 0...5 {
-                    queryAdd += identity + getUnit[j] + ","
-                }
+                newUnit.append(identity)
             }
         }
+        
         if (newUnitPick.isEmpty) {
             global.setDefault()
         }
         else {
+            for j in 0...newUnit.count - 1 {
+                for h in 0...newUnit.count - 1 {
+                    queryAdd += newUnit[j] + newUnit[h] + ","
+                }
+            }
             queryAdd = String(queryAdd.characters.dropLast())
             global.setQueryString(queryAdd)
             global.setUnitPick(newUnitPick)

@@ -71,7 +71,7 @@ class YahooQuery {
             let rateDict = resultDict["rate"] as! NSArray
             for _ in 0...self.unitPick.count - 1 {
                 var element:[Double] = []
-                for _ in 0...5 {
+                for _ in 0...self.unitPick.count - 1 {
                     let rate1 = rateDict[i] as! [String: Any]
                     let rate2 = String(describing: rate1["Rate"]!)
                     let add = Double(rate2)!
@@ -96,7 +96,7 @@ class YahooQuery {
         // Second, store the rate
         writeString += "Rate\n"
         for j in 0...self.unitPick.count - 1 {
-            for h in 0...5 {
+            for h in 0...self.unitPick.count - 1 {
                 writeString += String(self.unitTable[j][h]) + "\n"
             }
         }
@@ -151,7 +151,7 @@ class YahooQuery {
             }
             else if (rate == true && lineStr[i] != "END OF FILE") {
                 var element:[Double] = []
-                for _ in 0...5 {
+                for _ in 0...self.unitPick.count - 1 {
                     element.append(Double(lineStr[i])!)
                     i += 1
                 }
